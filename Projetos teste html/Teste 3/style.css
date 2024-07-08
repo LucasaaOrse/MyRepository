@@ -1,0 +1,148 @@
+@charset "UHT-8";
+
+@font-face {
+    font-family: "fonte";
+    src: url("fontes/idroid.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    background-color: bisque;
+}
+
+.cabecalho {
+    background: linear-gradient(to top, #456345, #7eb37f ) ;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-size: 12px;
+    padding: 20px;
+    margin: 0;
+    text-align: center;
+}
+
+.menu {
+    margin-top: 10px;
+
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.menu ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: backgroud-color 0.3s;
+
+}
+
+.menu ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+
+}
+
+.main-content {
+    font-family: Arial, Helvetica, sans-serif;
+    
+    background-color: white;
+    padding: 20px;
+    border: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+}
+
+.main-content h1 {
+    font-size: 30px;
+    color: #456345;
+    font-family: "fonte";
+
+}
+
+.main-content h2 {
+    font-family: "fonte";
+    background: linear-gradient(to right, #53be53, white);
+    color: #356337;
+
+}
+main {
+    padding: 20px;
+    
+}
+
+main p {
+    text-indent: 30px;
+    text-align: justify;
+}
+article a {
+    background-color: #53be539a;
+    text-decoration: none;
+
+}
+article {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.imagcentro {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+
+}
+.video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 20px auto;
+}
+
+.video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+#quersabermais {
+    background-color: #53be5379;
+    padding: 10px;
+    border: 1px solid #bb3030;
+    border-radius: 4px;
+
+}
+
+#quersabermais h2 {
+    background: linear-gradient(to right, green 30%, white);
+    color: white;
+
+}
