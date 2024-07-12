@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio tabelas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <table>
+
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td rowspan="2">3</td>
+            <td>4</td>
+
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>6</td>
+            <td>7</td>
+
+        </tr>
+        <tr>
+            
+            <td colspan="3">8</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td rowspan="2">10</td>
+            <td colspan="2">11</td>
+            <td>12</td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td>14</td>
+            <td>15</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td colspan="4">A</td>
+            <td rowspan="4">B</td>
+        </tr>
+        <tr>
+            <td rowspan="4">C</td>
+            <td>D</td>
+            <td>E</td>
+            <td>F</td>
+        </tr>
+        <tr>
+            <td>G</td>
+            <td>H</td>
+            <td>I</td>
+        </tr>
+        <tr>
+            <td>J</td>
+            <td>K</td>
+            <td>M</td>
+        </tr>
+        <tr>
+            <td colspan="4">N</td>
+        </tr>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <td>grupo</td>
+                <td>nomes</td>
+                <td colspan="3">filmes</td>
+            </tr>
+        </thead>
+        <tr>
+            <td rowspan="3">Mulheres</td>
+            <td>ana</td>
+            <td>alien</td>
+            <td>rambo</td>
+            <td>vingadores</td>
+        </tr>
+        <tr>
+            <td>beatriz</td>
+            <td>hulk</td>
+            <td>inception</td>
+            <td>batman</td>
+        </tr>
+        <tr>
+            <td>cladia</td>
+            <td>oblivion</td>
+            <td>matrix</td>
+            <td>big hero</td>
+
+
+        </tr>
+        <tr>
+            <td rowspan="3">homens</td>
+            <td>bruno</td>
+            <td>intocaveis</td>
+            <td>amnesia</td>
+            <td>gladiador</td>
+
+        </tr>   
+        <tr>
+            <td>daniel</td>
+            <td>wall-e</td>
+            <td>oldboy</td>
+            <td>dangal</td>
+
+
+        </tr>
+        <tr>
+            <td>fabiano</td>
+            <td>star wars</td>
+            <td>taxi driver</td>
+            <td>toy story</td>
+
+
+        </tr>
+
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2" scope="col">area</th>
+                <th rowspan="2" scope="col">disciplinas</th>
+                <th colspan="2" scope="colgroup">notas</th>
+                <th rowspan="2" scope="col">media</th>
+            </tr>
+            <tr>
+                <th scope="col">nota 1</th>
+                <th scope="col">nota 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th rowspan="4" scope="rowgroup">exatas</th>
+                <td>matematica</td>
+                <td>0.0</td>
+                <td>0.0</td>
+                <td>0.0</td>
+            </tr>
+            <tr>
+                <td>fisica</td>
+                <td>0.0</td>
+                <td>0.0</td>
+                <td>0.0</td>
+            </tr>
+            <tr>
+                <td>quimica</td>
+                <td>0.0</td>
+                <td>0.0</td>
+                <td>0.0</td>
+
+            </tr>
+            <tr>
+                <td>biologia</td>
+                <td>0.0</td>
+                <td>0.0</td>
+                <td>0.0</td>
+
+            </tr>
+            <tr>
+                <th colspan="4" scope="row">media de exatas</th>
+                <td>0.0</td>
+            </tr>
+            <tr>
+                <th rowspan="2" scope="rowgroup">humanas</th>
+                <td>historia</td>
+                <td>0.0</td>
+                <td>0.0</td>
+                <td>0.0</td>
+
+            </tr>
+            <tr>
+                <td>geografia</td>
+                <td>0.0</td>
+                <td>0.0</td>
+                <td>0.0</td>
+
+            </tr>
+            <tr>
+                <th colspan="4" scope="rowgroup">media de humanas</th>
+                <td>0.0</td>
+
+            </tr>
+        </tbody>
+
+
+    </table>
+
+</body>
+</html>
