@@ -14,7 +14,7 @@ html, body {
 }
 
 body {
-    background: url("imagens/fundo-madeira.jpg") no-repeat top center;
+    background: url("../imagens/fundo-madeira.jpg") no-repeat top center;
     background-size: cover;
     background-attachment: fixed;
 }
@@ -31,7 +31,7 @@ section#celular {
     left: 50%;
     transform: translate(-50%, -50%);
 
-    background: url("imagens/frame-iphone.png") no-repeat;
+    background: url("../imagens/frame-iphone.png") no-repeat;
     background-size: contain;
     width: 250.0px;
     height: 470.0px;
