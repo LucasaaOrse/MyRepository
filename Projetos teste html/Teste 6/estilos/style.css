@@ -1,0 +1,53 @@
+@charset "UHT-8";
+
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+
+}
+
+header {
+    background-color: white;
+
+}
+
+header h1 {
+    background-color: #cf4a82;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    padding: 20px;
+    margin: auto;
+}
+
+header ul {
+    background-color: #9b3962;
+    padding: 10px;
+
+}
+
+header li {
+    display: inline-block;
+
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+    padding: 5px;
+
+}
+
+header a:hover {
+    background-color: #cf4a82;
+    border-radius: 5px;
+
+}

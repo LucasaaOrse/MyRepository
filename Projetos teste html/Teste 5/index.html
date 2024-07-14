@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina 1</title>
+</head>
+<body>
+    <h1>Meu formulario</h1>
+    <form action="cadastro.php" method="post">
+        <fieldset>
+            <legend>Dados</legend>
+            <p>
+                <label for="inome">Nome:</label> <input type="text" name="nome" id="inome" required minlength="5">
+            </p>
+            <p>
+                <label for="isenha">Senha: </label>
+                <input type="password" name="senha" id="isenha" placeholder="Sua senha">
+            </p>
+            <p><input type="submit" value="Enviar"></p>
+        </fieldset>
+
+    </form>
+
+</body>
+</html>
