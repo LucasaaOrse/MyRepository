@@ -10,44 +10,54 @@
 html, body {
     width: 100vw;
     height: 100vh;
-
+    background-color: darkgray;
 }
 
 header {
-    background-color: white;
+    background-color: #96305A;
 
 }
 
 header h1 {
-    background-color: #cf4a82;
-    text-align: center;
-    color: white;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-    width: 300px;
-    padding: 20px;
-    margin: auto;
-}
 
-header ul {
-    background-color: #9b3962;
     padding: 10px;
+    text-align: center;
 
 }
 
-header li {
-    display: inline-block;
+
+menu {
+    display: block;
 
 }
 
-header a {
+menu > ul {
+
+    list-style: none;
+}
+
+menu > ul > li > a {
+    display: block;
+    padding: 10px;
     text-decoration: none;
+    background-color: #6d2342;
     color: white;
-    padding: 5px;
+    text-align: center;
+    border-top: 2px solid gray;
+}
+
+menu > ul > li > a:hover {
+    background-color: #cf4c83;
 
 }
 
-header a:hover {
-    background-color: #cf4a82;
-    border-radius: 5px;
+main {
+    width: 90vw;
+    background-color: white;
+    margin: auto;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
 
 }
+
