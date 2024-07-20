@@ -10,6 +10,10 @@ body {
 div.caixa {
 
     background-color: lightgreen;
-    
-
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+    display: inline-block;
 }
+
