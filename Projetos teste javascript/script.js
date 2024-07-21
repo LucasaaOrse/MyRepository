@@ -1,4 +1,4 @@
-const a = document.getElementsByClassName('caixa')
-
-
-a.innerText("agua")
+function clicar(element) {
+    element.in
+    element.innerHTML = 'Clicou'
+}
