@@ -1,19 +1,56 @@
 @charset "UTF-8";
 
+* {
+    margin: 0px;
+    padding: 0px;
+
+
+}
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+
 body {
-    background-color: lightskyblue;
+    background-color: #F2E2CE;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 2em;
-}
-
-
-div.caixa {
-
-    background-color: lightgreen;
-    width: 200px;
-    height: 200px;
-    line-height: 200px;
     text-align: center;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+
 }
 
+main {
+    overflow: hidden;
+    background-color: white;
+    width: 500px;
+
+    margin: auto;
+    border-radius: 50px;
+    margin: 50px;
+}
+
+img#img {
+    border-radius: 50%;
+    margin-top: 10px;
+    border: 5px solid rgba(169, 169, 169, 0.479);
+}
+
+button#botao {
+    background-color: darkgray;
+    border: none;
+    color: white;
+    padding: 2px;
+    margin: 10px;
+    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.425);
+    padding: 3px;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.479);
+}
+
+button#botao.clicked {
+
+    background-color: blue;
+
+}

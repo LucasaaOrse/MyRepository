@@ -1,6 +1,9 @@
-function clicar(element) {
-    element.i
-    element.innerHTML = 'Clicou'
-}
+document.addEventListener("DOMContentLoaded", function() {
+    var button = document.getElementById('botao');
 
-window.document.getElementById
+    button.addEventListener('click', function() { 
+        button.classList.toggle('clicked')
+
+    });
+
+});
