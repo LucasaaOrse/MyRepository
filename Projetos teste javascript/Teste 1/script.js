@@ -1,4 +1,6 @@
 function clicar(element) {
-    element.in
+    element.i
     element.innerHTML = 'Clicou'
 }
+
+window.document.getElementById
