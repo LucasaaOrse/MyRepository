@@ -29,12 +29,14 @@ main {
     margin: auto;
     border-radius: 50px;
     margin: 50px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.507);
 }
 
 img#img {
     border-radius: 50%;
     margin-top: 10px;
     border: 5px solid rgba(169, 169, 169, 0.479);
+    max-width: 405px;
 }
 
 button#botao {
@@ -53,4 +55,13 @@ button#botao.clicked {
 
     background-color: blue;
 
+}
+
+
+body.clicked {
+    background-color: #101926;
+}
+
+body.clicked img#img {
+    content: url('imagens/Pordosol.jpg');
 }
