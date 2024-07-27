@@ -1,0 +1,69 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    margin-top: 15px;
+    height: 50px;
+    font-size: 1.2em;
+    font-weight: 500;
+    padding: 1em;
+    background-color: lightbluee;
+
+    
+}
+
+.nav-list {
+    display: flex;
+    align-items: center; /* Adicione isso para alinhar os itens verticalmente */
+    list-style: none;
+    margin: 0;
+    width: 100%;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.555);
+    
+    
+}
+
+.nav-list li {
+    margin: 0 10px;
+    
+}
+
+.btn {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.nav-list .nav-icon {
+    margin-left: auto; /* Empurra o ícone para a direita */
+}
+
+@media screen and (min-width: 768px) {
+
+    nav {
+        height: 60px;
+        padding: 15px 30px;
+
+    }
+    
+    .nav-list li {
+        margin: 0 20px;
+
+    }
+
+    .btn {
+        padding: 10px 15px;
+
+    }
+}
