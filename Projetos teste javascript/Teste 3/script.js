@@ -35,9 +35,36 @@ function adicionar() {
     }
     num.value = " "
     num.focus()
+    res.innerHTML = ''
  }
 
  function finalizar(){
+    if (valores.length == 0) {
+        alert('Digite algum valor para finalizar')
+
+    }else {
+        let total = valores.length
+        let soma = 0
+        let media = 0
+        let maior = valores[0]
+        let menor = valores[0]
+        for (let pos in valores) {
+            soma += valores[pos]
+            if (maior < valores[pos]) {
+                maior = valores[pos]
+            }if (menor > valores[pos]) {
+                menor = valores[pos]
+            }
+            media = soma / total
+        }
+        res.innerHTML += `<p>O total de valores digitados foi ${total}.</p> `
+        res.innerHTML += `<p>A soma dos valores dá ${soma}.</p>`
+        res.innerHTML += `<p>O menor e maior valores respectivamente são ${menor} e ${maior}.</p>`
+        res.innerHTML += `<p>A media entre os valores é ${media}.</p> `
+
+
+
+    }   
 
  
  }
