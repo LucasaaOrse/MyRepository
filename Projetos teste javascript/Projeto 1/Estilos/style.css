@@ -8,62 +8,297 @@
     box-sizing: border-box;
 }
 
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Nav */
 nav {
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-family: 'Montserrat', sans-serif;
-    padding: 10px;
-    margin-top: 15px;
-    height: 50px;
-    font-size: 1.2em;
-    font-weight: 500;
-    padding: 1em;
-    background-color: lightbluee;
+    position: relative;
+    padding: 10px 30px;
 
-    
 }
 
+nav::after {
+    content: '';
+    width: 95%;
+    height: 4px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black; /* Cor padrão para o tema claro */
+}
+
+/* Nav List */
 .nav-list {
     display: flex;
-    align-items: center; /* Adicione isso para alinhar os itens verticalmente */
+    align-items: center;
     list-style: none;
-    margin: 0;
+}
+
+.nav-item {
+    display: none;
+    margin: 0 20px;
+    position: relative;
+}
+
+.nav-item a {
+    position: relative;
+    display: inline-block;
+    padding: 5px 0;
+    text-decoration: none;
+    color: black;
+}
+
+/* Barrinha abaixo dos itens de menu */
+.nav-item::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: black; /* Cor padrão para o tema claro */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-item:hover::after {
     width: 100%;
-    border-bottom: 2px solid rgba(128, 128, 128, 0.555);
-    
-    
 }
 
-.nav-list li {
-    margin: 0 10px;
-    
-}
-
-.btn {
-    padding: 8px;
+/* Icone do Tema */
+.theme-icon {
+    position: absolute;
+    right: 10px;
     cursor: pointer;
 }
 
-.nav-list .nav-icon {
-    margin-left: auto; /* Empurra o ícone para a direita */
+/* Menu Lateral */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 10; /* Garante que a sidebar fique acima dos botões do carrossel */
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
 }
 
-@media screen and (min-width: 768px) {
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
 
-    nav {
-        height: 60px;
-        padding: 15px 30px;
+.sidebar a:hover {
+    color: #f1f1f1;
+}
 
-    }
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%; /* Ajuste conforme necessário */
+    max-width: 800px; /* Define um tamanho máximo para o carrossel em telas grandes */
+    margin: 0 auto; /* Centraliza o carrossel horizontalmente */
     
-    .nav-list li {
-        margin: 0 20px;
+}
 
+.carousel-inner {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 100%;
+    align-items: center; /* Alinha verticalmente as imagens */
+}
+
+.carousel-item {
+    min-width: 100%;
+    box-sizing: border-box;
+    flex: 0 0 auto; /* Evita que os itens se estiquem */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+}
+
+.carousel-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.carousel-control.prev {
+    left: 10px;
+}
+
+.carousel-control.next {
+    right: 10px;
+}
+
+/* Tema Claro */
+body.light-theme .carousel-control {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Tema Escuro */
+body.dark-theme .carousel-control {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: black;
+}
+.prev:hover, .next:hover {
+    background-color: #e0e0e0;
+
+}
+
+.prev.dark-theme:hover, .next.dark-theme:hover {
+    background-color: #000000;
+
+}
+
+/* Tema Claro */
+body.light-theme {
+    background-color: #f4f4f4;
+    color: #000000; /* Cor do texto no tema claro */
+}
+
+nav.light-theme {
+    background-color: lightblue;
+}
+
+nav.light-theme::after {
+    background-color: black; /* Cor da barra inferior no tema claro */
+}
+
+.nav-item a.light-theme {
+    color: #000000; /* Cor dos links no tema claro */
+}
+
+.nav-item a.light-theme::after {
+    background: black; /* Cor da barrinha embaixo dos itens no tema claro */
+}
+
+/* Tema Escuro */
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0; /* Cor do texto no tema escuro */
+}
+
+nav.dark-theme {
+    background-color: #333;
+}
+
+nav.dark-theme::after {
+    background-color: #e0e0e0; /* Cor da barra inferior no tema escuro */
+}
+
+.nav-item a.dark-theme {
+    color: #e0e0e0; /* Cor dos links no tema escuro */
+}
+
+.nav-item a::after.dark-theme {
+    background: #e0e0e0; /* Cor da barrinha embaixo dos itens no tema escuro */
+}
+
+/* Media Query para telas maiores */
+@media (min-width: 768px) {
+    .nav-icon {
+        display: none;
     }
 
-    .btn {
-        padding: 10px 15px;
+    .nav-item {
+        display: inline-block;
+    }
 
+    .nav-item a {
+        font-size: 1.2em;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .theme-icon {
+        position: static;
+        margin-left: auto;
+    }
+
+    .carousel-inner {
+        justify-content: space-between; /* Distribui espaço entre os itens */
+    }
+
+    .carousel-item img {
+        max-height: 400px; /* Ajuste conforme necessário para telas maiores */
+        max-width: 50%; /* Define a largura máxima da imagem em telas maiores */
+    }
+
+    .carousel-control.prev, .carousel-control.next {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 10px;
+    }
+
+    .carousel {
+        max-width: 1000px; /* Ajuste conforme necessário */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carousel-control.prev {
+        left: calc(50% - 320px);
+    }
+
+    .carousel-control.next {
+        right: calc(50% - 320px);
+    }
+
+    .carousel-control {
+        z-index: 5; /* Garante que o botão do carrossel fique abaixo da sidebar */
+        padding: 15px;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        padding: 5px 10px;
+        margin: 0;
+        border-radius: 5px;
+    }
+    body.dark-theme .carousel-control {
+        background-color: rgba(255, 255, 255, 0.5);
+        color: black;
     }
 }
+
+
+
+
+
+
