@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Para o rodapé ficar na parte inferior */
+        }
+
+        /* Container do botão */
+        .container {
+            text-align: center;
+            flex-grow: 1; /* Faz com que o container cresça para ocupar espaço */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilo para a lista de perguntas */
+        .perguntas-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            margin-bottom: 2rem; /* Adicionando espaço abaixo do container */
+        }
+
+        .pergunta {
+            border-bottom: 1px solid #cccccc;
+            padding: 1rem 0;
+        }
+
+        .pergunta:last-child {
+            border-bottom: none; /* Remove a borda do último item */
+        }
+
+        .pergunta h3 {
+            color: #333333;
+        }
+
+        .pergunta p {
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('partials/navbar') %> <!-- Inclui o navbar -->
+
+    <div class="container">
+        <h1>Bem-vindo ao Sistema de Perguntas</h1>
+        <a href="/perguntas">
+            <button>Perguntar</button>
+        </a>
+    </div>
+
+    <div class="perguntas-container">
+        <h2>Perguntas Cadastradas</h2>
+        <% perguntas.forEach(pergunta => { %>
+            <div class="pergunta">
+                <h3><%= pergunta.pergunta %></h3>
+                <p><%= pergunta.descricao %></p>
+            </div>
+        <% }) %>
+        <% if (perguntas.length === 0) { %>
+            <p>Nenhuma pergunta cadastrada.</p>
+        <% } %>
+    </div>
+
+    <%- include('partials/footer') %> <!-- Inclui o rodapé -->
+
+</body>
+</html>
