@@ -57,3 +57,22 @@ app.post('/submit', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+app.get("/pergunta/:id", (req, res) =>{
+    const id = req.params.id;
+
+    Pergunta.findByPk(id)
+        .then(pergunta =>{
+            if (pergunta) {
+                res.render('pergunta', {pergunta});
+
+            } else {
+                res.status(404).send('Pergunta não encontrada')
+            }
+        })
+        .catch(err => {
+            console.error("erro ao buscar a pergunta", err )
+            res.status(500).send('Erro no servidor');
+        })
+
+})

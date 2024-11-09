@@ -90,8 +90,7 @@
         <h2>Perguntas Cadastradas</h2>
         <% perguntas.forEach(pergunta => { %>
             <div class="pergunta">
-                <h3><%= pergunta.pergunta %></h3>
-                <p><%= pergunta.descricao %></p>
+                <a href="/pergunta/<%= pergunta.id %>"><h3><%= pergunta.pergunta %></h3></a>
             </div>
         <% }) %>
         <% if (perguntas.length === 0) { %>
