@@ -4,6 +4,7 @@ const app = express();
 const PORT = 3000;
 const connection = require('./database/database'); // Importar a conexão com o banco
 const Pergunta = require("./database/perguntas");
+const Resposta = require("./database/Resposta")
 
 connection.authenticate()
     .then(() => {
@@ -54,9 +55,6 @@ app.post('/submit', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
 
 app.get("/pergunta/:id", (req, res) =>{
     const id = req.params.id;
@@ -64,8 +62,18 @@ app.get("/pergunta/:id", (req, res) =>{
     Pergunta.findByPk(id)
         .then(pergunta =>{
             if (pergunta) {
-                res.render('pergunta', {pergunta});
 
+                Resposta.findAll({
+                    where: {perguntaId: pergunta.id},
+                    order: [['id', 'DESC']]
+                }).then(respostas =>{
+                    res.render('pergunta', {
+                        pergunta: pergunta,
+                        respostas: respostas
+                    
+                    });
+
+                })
             } else {
                 res.status(404).send('Pergunta não encontrada')
             }
@@ -76,3 +84,23 @@ app.get("/pergunta/:id", (req, res) =>{
         })
 
 })
+
+app.post("/responder", (req, res) => {
+    var corpo = req.body.corpo
+    var perguntaId = req.body.pergunta
+
+    Resposta.create({
+        corpo: corpo,
+        perguntaId: perguntaId
+
+    }).then(() => {
+        res.redirect('/pergunta/'+perguntaId)
+
+    })
+
+})
+
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+});

@@ -2,8 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pergunta Detalhada</title>
     <style>
         /* Reset básico */
         * {
@@ -17,17 +16,98 @@
             background-color: #f2f2f2;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Para o rodapé ficar na parte inferior */
+            min-height: 100vh;
         }
 
-        /* Container do botão */
+        /* Estilos para navbar e container principal */
         .container {
-            text-align: center;
-            flex-grow: 1; /* Faz com que o container cresça para ocupar espaço */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            flex-grow: 1; /* Faz o conteúdo crescer para ocupar o restante da tela */
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .pergunta-titulo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #cccccc;
+            padding-bottom: 0.5rem;
+        }
+
+        .descricao {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Estilo para respostas */
+        .respostas-section {
+            margin-top: 1rem;
+        }
+
+        .respostas-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .resposta {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        /* Link para voltar */
+        .back-link {
+            display: block;
+            margin-top: 1rem;
+            text-align: right;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo para o formulário */
+        form {
+            margin-top: 2rem;
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 150px;
+            margin-bottom: 1rem;
+            color: #333;
         }
 
         button {
@@ -45,49 +125,68 @@
             background-color: #45a049;
         }
 
-        /* Estilo para a lista de perguntas */
-        .perguntas-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
+        .form-container {
+            margin-top: 2rem;
+            padding: 2rem;
             border-radius: 8px;
+            background-color: #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
-            margin-bottom: 2rem; /* Adicionando espaço abaixo do container */
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 2rem;
         }
 
-        .pergunta {
-            border-bottom: 1px solid #cccccc;
+        form input[type="hidden"] {
+            display: none;
+        }
+
+        /* Estilo para o footer fixo */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
             padding: 1rem 0;
-        }
-
-        .pergunta:last-child {
-            border-bottom: none; /* Remove a borda do último item */
-        }
-
-        .pergunta h3 {
-            color: #333333;
-        }
-
-        .pergunta p {
-            color: #666666;
+            position: relative;
+            margin-top: auto; /* Faz com que o footer fique sempre na parte inferior */
+            width: 100%;
         }
     </style>
 </head>
-
 <body>
-    <%- include('partials/navbar') %> <!-- Inclui o navbar -->
 
-        <div class="container">
-           <h1><%= pergunta.pergunta %></h1>
-            <p><%= pergunta.descricao %></p>
+    <!-- Partial para Navbar -->
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+        <!-- Exibir Pergunta -->
+        <h1 class="pergunta-titulo"><%= pergunta.pergunta %></h1>
+        <p class="descricao"><%= pergunta.descricao %></p>
+
+        <form action="/responder" method="post">
+            <label for="corpo">Resposta</label>
+            <textarea name="corpo" placeholder="Digite sua resposta aqui"></textarea>
+            <input type="hidden" name="pergunta" value="<%= pergunta.id %>">
+            <button type="submit">Responder</button>
+        </form>
+
+        <!-- Exibir Respostas -->
+        <div class="respostas-section">
+            <h2 class="respostas-title">Respostas</h2>
+
+            <!-- Exemplo de respostas estáticas (substitua com código dinâmico quando implementar) -->
+            <% respostas.forEach(resposta =>{ %>
+                <div class="resposta">
+                    <p><%= resposta.corpo %></p>
+                </div>
+            <% }) %>
         </div>
-        <a href="/">Voltar a lista de perguntas</a>
 
+        <!-- Link para voltar -->
+        <a href="/" class="back-link">Voltar para a lista de perguntas</a>
+    </div>
 
-
-    <%- include('partials/footer') %> <!-- Inclui o rodapé -->
+    <!-- Partial para Footer -->
+    <%- include('partials/footer') %>
 
 </body>
 </html>
