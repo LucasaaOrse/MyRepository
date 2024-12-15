@@ -3,6 +3,12 @@ const app = express() // criando o servidor
 const bodyParser = require("body-parser")
 const connection = require("./database/database")
 
+const categoriesController = require("./categories/CategoriasController")
+const articlesController = require("./articles/ArticlesController")
+
+const Category = require("./categories/Category")
+const Article = require("./articles/Article")
+
 app.set('view engine', "ejs") // setando qual a engine vai renderizar nosso html
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -29,3 +35,7 @@ app.listen(8080, () =>{
 
 
 })
+
+app.use("/",categoriesController )
+
+app.use("/",articlesController)
