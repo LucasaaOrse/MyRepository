@@ -1,14 +1,14 @@
-
 <%- include('../../partials/header.ejs') %>
 
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <h2 class="card-title mb-4">Cadastrar Nova Categoria</h2>
+            <h2 class="card-title mb-4">Novo artigo</h2>
             <form action="/categories/save" method="post" class="row g-3">
                 <div class="col-12">
                     <label for="title" class="form-label">Título da Categoria</label>
-                    <input type="text" name="title" id="title" class="form-control" placeholder="Defina o título da Categoria" required>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Defina o título do artigo" required> <br>
+                    <textarea class="form-control" name="body" placeholder="Escreva o artigo aqui" id=""></textarea>
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
