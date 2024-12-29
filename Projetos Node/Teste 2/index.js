@@ -24,9 +24,53 @@ connection
         console.error();
         
     })
-app.get("/", (req, res) => {
-    res.render("index")
+    app.get("/", (req, res) => {
+        const categoryId = req.query.categoryId;  // Obtém o ID da categoria da query string, se houver
+    
+        // Condicional para aplicar o filtro de categoria
+        const filterOptions = categoryId ? { where: { categoryId: categoryId } } : {};
+    
+        Article.findAll({
+            ...filterOptions,  // Aplica o filtro de categoria, se existir
+            order: [
+                ['id', 'DESC']  // Ordena os artigos pela data de criação (do mais recente ao mais antigo)
+            ]
+        }).then(articles => {
+    
+            Category.findAll().then(categories => {
+                console.log(categories); // Verifique no console se as categorias estão corretas
+                res.render("index", { 
+                    articles: articles, 
+                    categories: categories, 
+                    selectedCategory: categoryId 
+                });
+            });
+            
+    
+        }).catch((error) => {
+            console.error(error);
+            res.redirect('/');  // Redireciona para a página inicial em caso de erro
+        });
+    });
+    
 
+app.get("/:slug", (req,res) => {
+    var slug = req.params.slug;
+    Article.findOne({
+        where: {
+            slug: slug
+        }
+    }).then(article => {
+        if(article != undefined){
+            Category.findAll().then(categories => {
+                res.render("article", {article: article, categories: categories})
+            })
+        }else {
+            res.redirect("/")
+        }
+    }).catch( err => {
+        res.redirect("/")
+    })
 
 })
 
