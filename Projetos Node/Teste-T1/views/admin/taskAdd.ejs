@@ -1,0 +1,38 @@
+<%- include('../partials/header') %> <!-- Inclui o cabeçalho -->
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Adicionar Nova Task</h1>
+    <form action="/add-task" method="POST">
+        <div class="row">
+            <!-- Campo de Designação -->
+            <div class="col-md-6 mb-3">
+                <label for="designacao" class="form-label">Designação</label>
+                <input type="text" class="form-control" id="designacao" name="designacao" placeholder="Ex: ABC/IP/1234" required>
+                <div class="form-text">Formato: 3 letras / IP / 4 números.</div>
+            </div>
+
+            <!-- Campo de Cliente -->
+            <div class="col-md-6 mb-3">
+                <label for="client" class="form-label">Cliente</label>
+                <input type="text" class="form-control" id="client" name="client" placeholder="Nome do cliente" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Campo Tipo de Task -->
+            <div class="col-md-6 mb-3">
+                <label for="typeTask" class="form-label">Tipo de Task</label>
+                <select class="form-select" name="typeTask" id="typeTask" required>
+                    <option value="blc">BLC</option>
+                    <option value="bld">BLD</option>
+                    <option value="MUK">MUK</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Botão de Salvar -->
+        <button type="submit" class="btn btn-primary">Salvar Task</button>
+    </form>
+</div>
+
+<%- include('../partials/footer') %> <!-- Inclui o rodapé -->
