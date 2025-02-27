@@ -1,3 +1,4 @@
 {
-    "livePreview.defaultPreviewPath": "/Projetos teste javascript/index.html"
+    "livePreview.defaultPreviewPath": "/Projetos teste javascript/index.html",
+    "git.ignoreLimitWarning": true
 }

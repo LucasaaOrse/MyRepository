@@ -1,0 +1,8 @@
+POST  http://localhost:8000/game/new
+Content-Type: application/json
+
+{
+    "title": "HALO",
+    "year": 2000,
+    "price": 500
+}

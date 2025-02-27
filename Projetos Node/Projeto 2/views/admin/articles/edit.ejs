@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>    
+    <%- include('../../partials/header.ejs') %>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Editar Artigo</h2>
+            <form action="/article/update" method="post" class="row g-3">
+                <div class="col-12">
+                    <input type="hidden" value="<%= article.id %>" name="id">
+                    <label for="title" class="form-label">Título do Artigo</label>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Defina o título do artigo" required value="<%= article.title %>"> <br>
+                    <textarea class="form-control" name="body" id="article"><%= article.body %></textarea> <br>
+                    <label>Categoria</label>
+                    <select name="category" id="" class="form-control">
+                        <% categories.forEach((category) => { %>
+                            <% if (category.id == article.categoryId) { %>
+                                <option value="<%= category.id %>" selected><%= category.title %> </option> 
+                            <% }else { %>
+                                <option value="<%= category.id %>"><%= category.title %> </option> 
+                            <% }%>
+                                 
+                        <%  })  %>
+                    </select> <br>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="content" style="display: none;">
+    <%- article.body %>
+</div>
+
+
+<%- include('../../partials/footer.ejs') %>
+
+<script src="/tinymce/tinymce.min.js"></script>
+<script>
+
+    tinymce.init({
+        language: 'pt_BR',
+        selector: "#article",
+        plugins: [
+                    'advlist',
+                    'autolink',
+                    'link',
+                    'image',
+                    'lists',
+                    'preview',
+                    'searchreplace',
+                    'wordcount',
+                    'fullscreen',
+                    'insertdatetime',
+                    'media',
+                    'save',
+                    'table',
+                    'emoticons',
+                ],
+                setup: function(editor) {
+    editor.on('init', function() {
+        setTimeout(() => {
+            editor.setContent($("#content").html());
+        }, 100);
+    });
+}
+
+    })
+
+
+</script>
+
+</body>
+</html>

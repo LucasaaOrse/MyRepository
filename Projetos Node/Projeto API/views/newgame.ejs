@@ -1,0 +1,24 @@
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Cadastrar novo Game</h2>
+            <form action="/game/new" method="post" class="row g-3">
+                <div class="col-12">
+                    <label for="title" class="form-label">Nome do Jogo</label>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Defina o título do jogo" required>
+                </div>
+                <div class="col-12">
+                    <label for="year" class="form-label">Ano do Jogo</label>
+                    <input type="number" name="year" min="1900" max="2099" id="year" class="form-control" placeholder="Defina o título do jogo" required>
+                </div>
+                <div class="col-12">
+                    <label for="price" class="form-label">Preço do Jogo</label>
+                    <input type="number" name="price" id="price" step="0.01" min="0" class="form-control" placeholder="Defina o título do jogo" required>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
