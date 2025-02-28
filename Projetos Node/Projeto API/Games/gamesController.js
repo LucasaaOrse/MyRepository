@@ -1,10 +1,14 @@
 const express = require('express')
 const Games = require("../Games/games")
 const router = express.Router()
+const cors = require("cors");
+
+router.use(cors());
+
 
 router.get("/games", (req, res) =>{
     Games.findAll().then(games =>{
-        res.render("../views/games.ejs", {games: games})
+        res.json(games)
     })
     
 })

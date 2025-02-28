@@ -5,6 +5,11 @@ const sequelize = require("sequelize")
 const connection = require("./DataBase/database")
 const GamesController = require("./Games/gamesController")
 const Games = require("./Games/games")
+const cors = require("cors");
+
+app.use(cors());
+
+
 
 
 app.set('view engine', "ejs") // setando qual a engine vai renderizar nosso html
