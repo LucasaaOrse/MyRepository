@@ -1,0 +1,55 @@
+<%- include("partials/header", { title: "Cadastro de Usuários" }) %>
+
+
+<div class="card shadow p-4">
+    <h2 class="text-center mb-4">Cadastro de Usuário</h2>
+    <form id="userForm">
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuário:</label>
+            <input type="text" id="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">E-mail:</label>
+            <input type="email" id="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha:</label>
+            <input type="password" id="password" class="form-control" required>
+        </div>
+        <div class="d-grid">
+            <button type="button" class="btn btn-primary btn-lg" onclick="registerUser()">Cadastrar</button>
+        </div>
+    </form>
+</div>
+
+<div class="text-center mt-3">
+    <a href="/" class="btn btn-secondary">Voltar</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<%- include("partials/footer") %>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+
+    const apiBaseUrl = "https://organic-space-spork-7gqrr97pj7fx95-8000.app.github.dev";
+
+        function registerUser(){
+            var user = document.getElementById("username").value
+            var email = document.getElementById("email").value
+            var password = document.getElementById("password").value
+
+            axios.post(`${apiBaseUrl}/user`,{
+                user: user,
+                email: email,
+                password: password
+            }).then(response =>{
+                alert("Usuario cadastrado")
+            }).catch((error =>{
+                console.error("Erro no cadastro:", error);
+                res.status(500).json({ message: "Erro interno do servidor", error: error.message });
+            }))
+        }
+
+    </script>

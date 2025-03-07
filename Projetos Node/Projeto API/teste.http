@@ -1,8 +1,3 @@
-POST  http://localhost:8000/game/new
+GET  http://localhost:8000/users
 Content-Type: application/json
-
-{
-    "title": "HALO",
-    "year": 2000,
-    "price": 500
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJsdWNhcy5vcnNlQGFhYWFhLmNvbSIsImlhdCI6MTc0MTM2MTE5NSwiZXhwIjoxNzQxMzY0Nzk1fQ.-vl0uThHlRQqM9p8wioHX_CZA57sM-KvQoQJbxuxmuw

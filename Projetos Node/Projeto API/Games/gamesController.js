@@ -1,15 +1,20 @@
 const express = require('express')
 const Games = require("../Games/games")
 const router = express.Router()
+const cors = require("cors");
+const auth = require("../middleware/Authenticator")
 
-router.get("/games", (req, res) =>{
+router.use(cors());
+
+
+router.get("/games", auth, (req, res) =>{
     Games.findAll().then(games =>{
-        res.render("../views/games.ejs", {games: games})
+        res.json(games)
     })
     
 })
 
-router.get("/game/:id", async (req, res) =>{
+router.get("/game/:id", auth, async (req, res) =>{
     var id = req.params.id
     let {title, price, year} = req.body
 
@@ -39,11 +44,11 @@ router.get("/game/:id", async (req, res) =>{
     }
 })
 
-router.get("/game", (req, res) =>{
+router.get("/game", auth, (req, res) =>{
     res.render("../views/newgame.ejs")
 })
 
-router.post("/game/new", (req, res) =>{
+router.post("/game", auth, (req, res) =>{
     var title = req.body.title
     var year = req.body.year
     var price = req.body.price
@@ -51,8 +56,8 @@ router.post("/game/new", (req, res) =>{
     if(title != undefined && year != undefined && price != undefined){
         Games.create({
             title: title,
-            year: year,
-            price: price
+            year: parseFloat(year),
+            price: parseInt(price) 
         }).then(() =>{
             res.redirect("/games")
         }).catch(err =>{
@@ -63,7 +68,7 @@ router.post("/game/new", (req, res) =>{
     }
 })
 
-router.delete("/game/:id", async (req, res) => {
+router.delete("/game/:id", auth, async (req, res) => {
     let id = req.params.id;
 
     if (isNaN(id)) {
@@ -84,8 +89,31 @@ router.delete("/game/:id", async (req, res) => {
     }
 });
 
-router.put("/game/:id",(req, res) =>{
+router.put("/game/:id", async (req, res) =>{
+    var id = req.params.id
+    var {title, year, price} = req.body
 
+    try {
+        let game = await Games.findByPk(id)
+
+        if(game){
+            await game.update({
+                title: title,
+                year: parseInt(year),
+                price: parseInt(price)
+            })
+            res.status(200).json({message: "Game Atualizado"})
+        }else{
+            res.status(400).json({message: "Game não encontrado"})
+        }
+
+    } catch (error) {
+        console.log("Erro ao atualizar o Game", error)
+        res.status(500).json({message: "Erro do servidor"})
+    }
+    
+
+    
 })
 
 module.exports = router
