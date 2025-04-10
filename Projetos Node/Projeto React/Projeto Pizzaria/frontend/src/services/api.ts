@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const api = axios.create({
-     baseURL: "https://my-repository-indol-one.vercel.app/"
+     baseURL: "pizzaria-backend-production-3bd4.up.railway.app"
 })
