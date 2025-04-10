@@ -1,14 +1,16 @@
-const path = require('path');
+require("dotenv").config();
 
 module.exports = {
   development: {
-    client: 'sqlite3',
+    client: "pg",
     connection: {
-      filename: path.resolve(__dirname, 'database.db') // Define o caminho absoluto do banco de dados
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false // necessário para o Neon
+      }
     },
-    useNullAsDefault: true,
     migrations: {
-      directory: path.resolve(__dirname, 'src', 'database', 'migrations') // Diretório para salvar as migrations
+      directory: "./src/database/migrations"
     }
   }
-};
+}
