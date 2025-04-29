@@ -1,9 +1,10 @@
 const Sequelize = require("sequelize")
 
-const connection = new Sequelize("guiaapi","root","Titico123!",{
-    host: "localhost",
-    dialect: "mysql",
-    timezone: "-03:00"
+const connection = new Sequelize({
+    dialect: "sqlite",
+    storage: "./database.sqlite",  // Arquivo do banco SQLite
+    logging: false              // Desativa logs no console
+    
 })
 
 module.exports = connection

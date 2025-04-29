@@ -1,22 +1,21 @@
-const Sequelize = require("sequelize")
-const connection = require("../DataBase/database")
+const Sequelize = require("sequelize");
+const connection = require("../DataBase/database");
 
-const Games = connection.define("games",{
-    title:{
+const Games = connection.define("games", {
+    title: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    year:{
+    year: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    price:{
-        type: Sequelize.DECIMAL(10,2),
+    price: {
+        type: Sequelize.FLOAT,  // SQLite pode não suportar DECIMAL
         allowNull: false
     }
+});
 
-})
+Games.sync({ force: false });
 
-Games.sync({force: false})
-
-module.exports = Games
+module.exports = Games;

@@ -1,0 +1,68 @@
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW8uQ2Fsb3NAYWFhYS5jb20iLCJuYW1lIjoiTHVjYXMgT3JzZSIsInJvbGUiOjEsImlhdCI6MTc0NTg3MTY2MiwiZXhwIjoxNzQ1ODc1MjYyfQ.lhGgXe22WlTjoqnVfqTMhyUjPqGk29_V4zQAmmFFCGA
+
+### Cadastrar User
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name": "João",
+    "email": "joao.Calos@1234.com",
+    "password": "123"    
+}
+
+### Get all users
+GET  http://localhost:3000/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### Get by id
+GET  http://localhost:3000/user/1
+Content-Type: application/json
+
+
+### Edit User
+PUT  http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "Lucas Orse",
+    "email": "joao.Calos@aaaa.com",
+    "role": 1  
+}
+
+
+### Delete user by id
+DELETE   http://localhost:3000/user/2
+Content-Type: application/json
+
+
+### password recover
+POST   http://localhost:3000/user/recover
+Content-Type: application/json
+
+{
+    "email": "joaoCalos@.com"
+}
+
+### password recover
+PUT   http://localhost:3000/user/password
+Content-Type: application/json
+
+{
+    "password": "12345",
+    "token": "b956d21df71b8675bb0dab9368d13b318aca95d7",
+    "id": 3
+}
+
+
+### Login
+POST  http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "joao.Calos@aaaa.com",
+    "password": "12345"
+    
+}
