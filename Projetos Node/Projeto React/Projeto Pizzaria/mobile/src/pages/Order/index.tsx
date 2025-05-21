@@ -118,7 +118,7 @@ export default function Order() {
   }
 
   // Se não existe, faz a requisição para adicionar
-  const response = await api.post("/order/add", {
+  const response = await api.post("/order/item", {
     order_id: router.params?.order_id,
     product_id: productSelected?.id,
     amount: Number(amount),
@@ -138,7 +138,7 @@ export default function Order() {
 
   async function handledeleteItem(item_id:string) {
         try {
-            const response = await api.delete("/order/remove", {
+            const response = await api.delete("/order/item", {
                 params: {
                     id: item_id,
                 }
