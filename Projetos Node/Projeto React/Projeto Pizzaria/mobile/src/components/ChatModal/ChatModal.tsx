@@ -129,7 +129,7 @@ export function ChatModal({ roomId, tableNumber }: ChatModalProps) {
             <View style={styles.chatHeader}>
               <Text style={styles.chatTitle}>Chat Mesa {tableNumber}</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Feather name="x" size={24} color="#fff" />
+                <Feather name="x" size={24} color="#000000" />
               </TouchableOpacity>
             </View>
 
@@ -152,7 +152,7 @@ export function ChatModal({ roomId, tableNumber }: ChatModalProps) {
             <View style={styles.inputContainer}>
               <TextInput
                 placeholder="Digite sua mensagem"
-                placeholderTextColor="#ccc"
+                placeholderTextColor="#ffffff"
                 style={styles.input}
                 value={message}
                 onChangeText={setMessage}
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   iconContainer: {
-    backgroundColor: '#3fd1ff',
+    backgroundColor: '#d9a441', // var(--primary)
     padding: 12,
     borderRadius: 50,
   },
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#ff4f4b',
+    backgroundColor: '#a7342f', // var(--red-wine)
   },
   modalContainer: {
     flex: 1,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   },
   chatBox: {
     margin: 20,
-    backgroundColor: '#1d1d2e',
+    backgroundColor: '#faf8f5', // var(--dark-900)
     borderRadius: 10,
     padding: 16,
     height: '70%',
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   chatTitle: {
     fontSize: 18,
-    color: '#fff',
+    color: '#0d0d0d', // var(--black)
     fontWeight: 'bold',
   },
   messageBubble: {
@@ -219,27 +219,29 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   garcom: {
-    backgroundColor: '#3fd1ff',
+    backgroundColor: '#d9a441', // var(--primary)
     alignSelf: 'flex-end',
   },
   cozinha: {
-    backgroundColor: '#fff',
+    backgroundColor: '#e9d4b0', // var(--dark-700)
     alignSelf: 'flex-start',
   },
   messageText: {
-    color: '#101026',
+    color: '#0d0d0d', // var(--black)
+    fontSize: 16,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 12,
-    gap: 8,
+    paddingHorizontal: 4,
   },
   input: {
     flex: 1,
-    backgroundColor: '#101026',
+    backgroundColor: '#999389', // var(--dark-800)
     borderRadius: 6,
     padding: 10,
-    color: '#fff',
+    color: '#0d0d0d', // var(--black)
+    marginRight: 8,
   },
 });

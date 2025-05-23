@@ -44,6 +44,6 @@ const styles = StyleSheet.create({
         borderColor: "#8a8a8a"
     },
     item:{
-        color: "#fff"
+        color: "#000000"
     }
 })

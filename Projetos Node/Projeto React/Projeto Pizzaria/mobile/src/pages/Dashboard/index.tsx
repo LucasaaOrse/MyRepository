@@ -52,14 +52,14 @@ export default function Dashboard() {
         style={styles.backButton}
         onPress={() => navigation.navigate("PedidosEmPreparo")}
       >
-        <Feather name="arrow-left" size={24} color="#fff" />
+        <Feather name="arrow-left" size={24} color="#0d0d0d" />
       </TouchableOpacity>
 
       <Text style={styles.title}>Novo pedido</Text>
 
       <TextInput
         placeholder="Número da mesa"
-        placeholderTextColor="#f0f0f0"
+        placeholderTextColor={styles.inputPlaceholder.color}
         style={styles.input}
         keyboardType="numeric"
         value={number}
@@ -72,7 +72,7 @@ export default function Dashboard() {
         disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator size="small" color="#101026" />
+          <ActivityIndicator size="small" color={styles.loading.color} />
         ) : (
           <Text style={styles.buttonText}>Abrir mesa</Text>
         )}
@@ -87,45 +87,54 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 15,
-    backgroundColor: "#1d1d2e"
+    backgroundColor: "#faf8f5", // var(--dark-900): branco levemente quente
   },
   backButton: {
     position: "absolute",
     top: 16,
     left: 16,
-    padding: 8
+    padding: 8,
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#FFF",
-    marginBottom: 24
+    color: "#0d0d0d", // var(--black)
+    marginBottom: 24,
   },
   input: {
     width: "90%",
-    height: 40,
-    backgroundColor: "#101026",
-    borderRadius: 4,
-    paddingHorizontal: 8,
+    height: 44,
+    backgroundColor: "#fde9c3",        // var(--beige-100)
+    borderWidth: 1,
+    borderColor: "#d9a441",            // var(--gold-500)
+    borderRadius: 8,
+    paddingHorizontal: 12,
     textAlign: "center",
     fontSize: 18,
-    color: "#fff"
+    color: "#0d0d0d",                  // var(--black)
+    marginBottom: 16,
+  },
+  inputPlaceholder: {
+    color: "#8a8a8a", // var(--gray-100)
   },
   button: {
     width: "90%",
-    height: 40,
-    backgroundColor: "#3fffa3",
-    borderRadius: 4,
+    height: 44,
+    backgroundColor: "#d9a441", // var(--primary) dourado
+    borderRadius: 8,
     marginVertical: 12,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   buttonDisabled: {
-    opacity: 0.6
+    opacity: 0.6,
   },
   buttonText: {
     fontSize: 18,
-    color: "#101026",
-    fontWeight: "bold"
-  }
+    color: "#0d0d0d", // var(--black)
+    fontWeight: "bold",
+  },
+  loading: {
+    color: "#0d0d0d", // cor do spinner: preto
+  },
 });

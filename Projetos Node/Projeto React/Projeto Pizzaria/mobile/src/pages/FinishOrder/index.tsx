@@ -41,50 +41,48 @@ export default function FinishOrder(){
                 <Text style={styles.buttonText}>
                     Finalizar pedido
                 </Text>
-                <FontAwesome5 size={20} color="#1d1d2e" name="shopping-cart" />
+                <FontAwesome5 size={20} color="#0d0d0d" name="shopping-cart" />
             </TouchableOpacity>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        backgroundColor: "#1d1d2e",
-        paddingVertical: "5%",
-        paddingHorizontal: "5%",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    alert:{
-        fontSize: 20,
-        color: "#fff",
-        fontWeight: "bold",
-        marginBottom: 12,
-
-    },
-    title:{
-        fontSize: 30,
-        fontWeight: "bold",
-        color: "#fff",
-        marginBottom: 12,
-
-    },
-    button:{
-        backgroundColor: "#3fffa3",
-        flexDirection: "row",
-        width: "69%",
-        height: 40,
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 4,
-        
-    },
-    buttonText:{
-        fontSize: 18,
-        marginRight: 8,
-        fontWeight: "bold",
-        color: "#1d1d2e"
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: "#faf8f5",      // var(--dark-900)
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  alert: {
+    fontSize: 20,
+    color: "#0d0d0d",                 // var(--black)
+    fontWeight: "bold",
+    marginBottom: 12,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#0d0d0d",                 // var(--black)
+    marginBottom: 24,
+  },
+  button: {
+    backgroundColor: "#d9a441",      // var(--primary)
+    flexDirection: "row",
+    width: "70%",
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    marginRight: 8,
+    fontWeight: "bold",
+    color: "#0d0d0d",                 // var(--black)
+  },
+});
 

@@ -136,36 +136,25 @@ export default function Order() {
   setItems(oldArray => [...oldArray, data]);
 }
 
-  async function handledeleteItem(item_id:string) {
-        try {
-            const response = await api.delete("/order/item", {
-                params: {
-                    id: item_id,
-                }
-            });
-    
-            // Se a resposta tiver id (order_id), só reduzimos a quantidade
-            if (response.data.id) {
-                const updatedItems = items.map(item => {
-                    if (item.id === item_id) {
-                        return {
-                            ...item,
-                            amount: Number(item.amount) - 1,
-                        };
-                    }
-                    return item;
-                });
-                setItems(updatedItems);
-            } else {
-                // Se não tiver id, foi removido de fato
-                const updatedItems = items.filter(item => item.id !== item_id);
-                setItems(updatedItems);
-            }
-    
-        } catch (error) {
-            console.log("Erro ao remover item da lista", error);
-        }
+  async function handleDeleteItem(item_id: string) {
+  try {
+    const { data } = await api.delete("/order/item", {
+      params: { id: item_id }
+    });
+
+    if (data.action === "decrement") {
+      setItems(items =>
+        items.map(i =>
+          i.id === item_id ? { ...i, amount: data.amount } : i
+        )
+      );
+    } else if (data.action === "delete") {
+      setItems(items => items.filter(i => i.id !== item_id));
     }
+  } catch (err) {
+    console.error("Erro ao remover item da lista", err);
+  }
+}
 
   function handleFinishOrder(){
         navigation.navigate("FinishOrder",{number: router.params.number, order_id: router.params.order_id})
@@ -220,7 +209,7 @@ export default function Order() {
           style={styles.input}
           onPress={() => setModalProductVisible(true)}
         >
-          <Text style={[styles.inputText, { color: productSelected && !checkProductAvailability(productSelected) ? 'red' : '#fff' }]}>
+          <Text style={[styles.inputText, { color: productSelected && !checkProductAvailability(productSelected) ? 'red' : '#0d0d0d' }]}>
             {productSelected?.name}
           </Text>
         </TouchableOpacity>
@@ -254,7 +243,7 @@ export default function Order() {
         data={items}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <ListItem key={item.id} data={item} deleteItem={handledeleteItem} />
+          <ListItem key={item.id} data={item} deleteItem={handleDeleteItem} />
         )}
         style={{ flex: 1, marginTop: 24 }}
       />
@@ -286,69 +275,73 @@ export default function Order() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1d1d2e",
+    backgroundColor: "#faf8f5",      // var(--dark-900)
     paddingVertical: "5%",
-    paddingHorizontal: "4%"
+    paddingHorizontal: "4%",
   },
   header: {
     flexDirection: "row",
     marginVertical: 12,
-    alignItems: "center"
+    alignItems: "center",
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#fff",
-    marginRight: 14
+    color: "#0d0d0d",                 // var(--black)
+    marginRight: 14,
   },
   input: {
-    backgroundColor: "#101026",
+    backgroundColor: "#e9d4b0",      // var(--dark-700) – mais escuro
     borderRadius: 4,
     height: 40,
     marginBottom: 12,
     justifyContent: "center",
     paddingHorizontal: 8,
-    color: "#fff"
   },
   inputText: {
-    color: "#fff",
-    fontSize: 18
+    color: "#0d0d0d",                 // var(--black)
+    fontSize: 18,
+    fontWeight: "600",                // texto mais grosso
   },
   qtdContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12
+    marginBottom: 12,
   },
   qtdText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff"
+    color: "#0d0d0d",                 // var(--black)
   },
   actions: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 24
+    marginBottom: 24,
   },
   buttonAdd: {
     width: "20%",
-    backgroundColor: "#3fd1ff",
+    backgroundColor: "#3fffa3",      // verde de ação
     borderRadius: 4,
     height: 40,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   button: {
     width: "75%",
-    backgroundColor: "#3fffa3",
+    backgroundColor: "#d9a441",      // var(--primary)
     borderRadius: 4,
     height: 40,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#101026"
-  }
+    color: "#0d0d0d",                 // var(--black)
+  },
 });
+

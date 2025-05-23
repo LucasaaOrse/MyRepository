@@ -9,7 +9,8 @@ import {
   Modal,
   ActivityIndicator,
   SafeAreaView,
-  Alert
+  Alert,
+  Platform, ToastAndroid
 } from "react-native";
 import { api } from "../../services/api";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -81,9 +82,26 @@ useEffect(() => {
     setOrders(prev => [newOrder, ...prev]);
   });
 
+  socket.on("orderDeleted", ({ id }: { id: string }) => {
+    // 1) Remove imediatamente da lista do app
+    setOrders(prev =>
+      prev.filter(o => String(o.id) !== String(id))
+    );
+
+    // 2) Exibe uma notificação rápida
+    const message = `Pedido da mesa ${id} foi cancelado.`;
+
+    if (Platform.OS === "android") {
+      ToastAndroid.show(message, ToastAndroid.SHORT);
+    } else {
+      Alert.alert("Pedido Cancelado", message);
+    }
+  });
+
   return () => {
     socket.off("orderFinished");
     socket.off("orderCreated");
+    socket.off("orderDeleted");
     socket.disconnect();
   };
 }, []);
@@ -168,7 +186,7 @@ useEffect(() => {
       {/* PEDIDOS PRONTOS */}
       <TouchableOpacity onPress={() => setShowReady(!showReady)} style={S.sectionHeader}>
         <Text style={S.sectionTitle}>Pedidos Prontos</Text>
-        <Feather name={showReady ? "chevron-up" : "chevron-down"} size={20} color="#3fffa3" />
+        <Feather name={showReady ? "chevron-up" : "chevron-down"} size={20} color="#3fffa3" style={S.chevron}/>
       </TouchableOpacity>
 
       {showReady && ordersReady.map((item) => (
@@ -183,7 +201,7 @@ useEffect(() => {
       {/* PEDIDOS EM PREPARO */}
       <TouchableOpacity onPress={() => setShowPending(!showPending)} style={S.sectionHeader}>
         <Text style={S.sectionTitle}>Pedidos em Preparo</Text>
-        <Feather name={showPending ? "chevron-up" : "chevron-down"} size={20} color="#f1c40f" />
+        <Feather name={showPending ? "chevron-up" : "chevron-down"} size={20} color="#f1c40f" style={S.chevron} />
       </TouchableOpacity>
 
       {showPending && ordersPending.map((item) => (
@@ -238,33 +256,59 @@ useEffect(() => {
 }
 
 const S = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#1d1d2e" },
+  container: {
+    flex: 1,
+    backgroundColor: "#faf8f5", // var(--dark-900)
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     padding: 16,
   },
-  title: { fontSize: 24, color: "#fff", fontWeight: "bold" },
-  actions: { flexDirection: "row", alignItems: "center", gap: 12 },
-  logout: { marginLeft: 12 },
+  title: {
+    fontSize: 24,
+    color: "#0d0d0d", // var(--black)
+    fontWeight: "bold",
+  },
+  actions: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logout: {
+    marginLeft: 12,
+  },
 
   item: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#101026",
+    backgroundColor: "#fff", // var(--dark-700)
     marginHorizontal: 16,
     marginVertical: 8,
     borderRadius: 6,
     padding: 12,
+    borderWidth: 1,
+    borderColor: "#000",
+    borderStyle: "solid",
   },
-  tag: { width: 8, height: "100%", borderRadius: 4, marginRight: 12 },
-  itemText: { color: "#fff", fontSize: 18 },
-  sub: { color: "#ccc", fontSize: 14 },
+  tag: {
+    width: 8,
+    height: "100%",
+    borderRadius: 4,
+    marginRight: 12,
+  },
+  itemText: {
+    color: "#0d0d0d", // var(--black)
+    fontSize: 18,
+  },
+  sub: {
+    color: "#8a8a8a", // var(--gray-100)
+    fontSize: 14,
+  },
 
   empty: {
     textAlign: "center",
-    color: "#666",
+    color: "#8a8a8a", // var(--gray-100)
     marginTop: 32,
     fontSize: 16,
   },
@@ -276,36 +320,58 @@ const S = StyleSheet.create({
     padding: 20,
   },
   modalBox: {
-    backgroundColor: "#1d1d2e",
+    backgroundColor: "#e9d4b0", // var(--dark-700)
     borderRadius: 8,
     padding: 16,
     maxHeight: "80%",
   },
-  modalTitle: { fontSize: 20, color: "#fff", marginBottom: 12 },
-  modalItem: { color: "#fff", fontSize: 16, marginVertical: 4 },
+  modalTitle: {
+    fontSize: 20,
+    color: "#0d0d0d", // var(--black)
+    marginBottom: 12,
+    fontWeight: "bold",
+  },
+  modalItem: {
+    color: "#0d0d0d", // var(--black)
+    fontSize: 16,
+    marginVertical: 4,
+  },
   modalClose: {
     marginTop: 16,
     alignSelf: "center",
-    backgroundColor: "#3fffa3",
+    backgroundColor: "#d9a441", // var(--primary)
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 4,
   },
-  modalCloseText: { color: "#101026", fontWeight: "bold" },
+  modalCloseText: {
+    color: "#0d0d0d", // var(--black)
+    fontWeight: "bold",
+  },
+
   sectionHeader: {
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  paddingHorizontal: 16,
-  paddingVertical: 12,
-  backgroundColor: "#101026",
-  marginHorizontal: 16,
-  marginTop: 16,
-  borderRadius: 6,
-},
-sectionTitle: {
-  fontSize: 20,
-  color: "#fff",
-  fontWeight: "bold",
-},
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#cfaa64", // var(--dark-800)
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 6,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    color: "#0d0d0d", // var(--black)
+    fontWeight: "bold",
+  },
+
+  chevron: {
+   // contorno preto mais espesso
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 4,   // aumenta para contorno mais grosso
+
+  },
 });
+
