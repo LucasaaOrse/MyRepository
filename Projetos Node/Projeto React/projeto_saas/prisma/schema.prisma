@@ -81,7 +81,10 @@ model User {
   id            String          @id @default(cuid())
   name          String?
   email         String?         @unique
+  password      String?          
   emailVerified DateTime?
+  emailConfirmationToken String?
+  emailConfirmationTokenExpires DateTime?
   image         String?
   address String? @default("")
   phone String? @default("")

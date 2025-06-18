@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ProfileFormData ,useProfileForm } from "./profile-form"
 import {
   Card,
@@ -45,6 +45,9 @@ import { Prisma } from "@/generated/prisma";
 import { updateProfile } from "../_actions/update-profile"
 import { toast } from "sonner"
 import { formatPhone } from "@/utils/formatPhone"
+import { TrialBanner } from "../../_components/TrialBanner"
+import { ResultPermissionProp } from "@/utils/permissions/canPermission"
+import { AvatarProfile } from "./profile-avatar"
 
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
@@ -53,13 +56,24 @@ type UserWithSubscription = Prisma.UserGetPayload<{
 }> 
 
 interface ProfileContentProps {
-  user: UserWithSubscription
+  user: UserWithSubscription,
+  permissions: ResultPermissionProp
 }
 
-export function ProfileContent({user}: ProfileContentProps){
+export function ProfileContent({user, permissions}: ProfileContentProps){
   
   const [selectedhour, setSelectedHour] = useState<string[]>(typeof user.times === "string" ? JSON.parse(user.times) : []);
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  const [hasFutureAppointments, setHasFutureAppointments] = useState(false);
+
+    useEffect(() => {
+      fetch("/api/clinic/appointments/check-future")
+        .then(res => res.json())
+        .then(json => setHasFutureAppointments(json.hasFuture));
+    }, []);
+
+    
 
 
   const form = useProfileForm({
@@ -137,6 +151,11 @@ const timeZone = Intl.supportedValuesOf('timeZone').filter(
 
 
   return (
+    <>
+      {permissions.planId === "TRIAL" && !permissions.expired && (
+        <TrialBanner permissions={permissions} />
+      )}
+
     <div className="mx-auto">
       <Form {... form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -148,14 +167,10 @@ const timeZone = Intl.supportedValuesOf('timeZone').filter(
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-center">
-                <div className="relative h-40 w-40 rounded-full overflow-hidden bg-gray-200">
-                  <Image
-                    src={user.image ? user.image : imagTest}
-                    alt="Foto clinica"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                <AvatarProfile
+                  userId={user.id}
+                  avatarUrl={user.image}
+                />
               </div>
 
               <div className="space-y-4">
@@ -231,42 +246,58 @@ const timeZone = Intl.supportedValuesOf('timeZone').filter(
                     Configurar horarios da clinica
                   </Label>
 
-                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button variant={"outline"} className="w-full justify-between">
-                        Clique aqui pra selecionar os horarios
-                        <ArrowRight className="w-5 h-5"/>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Horarios da clinica</DialogTitle>
-                        <DialogDescription>Selecione abaixo os horarios de funcionamento da clinica</DialogDescription>
-                      </DialogHeader>
+                   <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className="w-full justify-between"
+                          disabled={hasFutureAppointments}
+                        >
+                          {hasFutureAppointments
+                            ? "Horários bloqueados (agendamentos futuros)"
+                            : "Clique aqui pra selecionar os horários"}
+                          <ArrowRight className="w-5 h-5" />
+                        </Button>
+                      </DialogTrigger>
 
-                      <section className="py-4">
-                        <p className="text-sm text-muted-foreground mb-2">Selecione os horarios abaixo</p>
+                      {!hasFutureAppointments && (
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Horários da clínica</DialogTitle>
+                            <DialogDescription>
+                              Selecione abaixo os horários de funcionamento da clínica
+                            </DialogDescription>
+                          </DialogHeader>
 
-                        <div className="grid grid-cols-5 gap-2 ">
-                          {hours.map((hour) => (
-                            <Button
-                              key={hour}
-                              variant={"outline"}
-                              className={cn("h-10", selectedhour.includes(hour) && 'border-2 border-emerald-500 text-primary')}
-                              onClick={() => toglgleHour(hour)}
-                            >
-                              {hour}
-                            </Button>
-                          ))}
-                        </div>
-                      </section>
+                          <section className="py-4">
+                            <p className="text-sm text-muted-foreground mb-2">
+                              Selecione os horários abaixo
+                            </p>
 
-                      <Button onClick={() => setDialogOpen(false)} className="w-full"> 
-                        Salvar horarios
-                      </Button>
-                    </DialogContent>
+                            <div className="grid grid-cols-5 gap-2">
+                              {hours.map((hour) => (
+                                <Button
+                                  key={hour}
+                                  variant={"outline"}
+                                  className={cn(
+                                    "h-10",
+                                    selectedhour.includes(hour) &&
+                                      "border-2 border-emerald-500 text-primary"
+                                  )}
+                                  onClick={() => toglgleHour(hour)}
+                                >
+                                  {hour}
+                                </Button>
+                              ))}
+                            </div>
+                          </section>
 
-                  </Dialog>
+                          <Button onClick={() => setDialogOpen(false)} className="w-full">
+                            Salvar horários
+                          </Button>
+                        </DialogContent>
+                      )}
+                    </Dialog>
                 </div>
 
                 <FormField
@@ -309,5 +340,6 @@ const timeZone = Intl.supportedValuesOf('timeZone').filter(
 
       </Form>
     </div>
+    </>
   )
 }

@@ -12,7 +12,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { LogIn, Menu } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { handleRegister } from "../_actions/login"
+import { useRouter } from "next/navigation"
+
 
 export function Header(){
 
@@ -23,8 +24,9 @@ export function Header(){
     {href: "#contatos", label: "Contatos"}
   ]
 
-async function handleLogin(){
-  await handleRegister("github")
+  const router = useRouter()
+async function handleLoginRedirect(){
+  router.push("/login")
 }
 
   const NavLinks = () => (
@@ -45,25 +47,25 @@ async function handleLogin(){
         </Button>
       ))}
 
-      {status === "loading" ?(
-        <></>
-      ) : session ? (
-        <Link
-          href="/dashboard"
-          className="flex items-center justify-center gap-2 bg-black text-white rounded-full px-5 py-2 hover:bg-zinc-800 transition"
-        >
-          Acessar clinica
-
+    {status === "loading" ? (
+      <></>
+    ) : session ? (
+      <Button
+        asChild
+        variant="default"
+        className="flex items-center justify-center gap-2 bg-black text-white rounded-full px-5 py-2 hover:bg-zinc-800 transition"
+      >
+        <Link href="/dashboard">
+          {/* Você pode colocar um ícone aqui se quiser */}
+          Acessar clínica
         </Link>
-      ): (
-        <Button onClick={handleLogin}>
-          <LogIn/>
-          Portal da clinica
-        </Button>
-
-      ) 
-
-      }
+      </Button>
+    ) : (
+      <Button onClick={handleLoginRedirect} className="flex items-center gap-2">
+        <LogIn />
+        Portal da clínica
+      </Button>
+    )}
     </>
   )
 

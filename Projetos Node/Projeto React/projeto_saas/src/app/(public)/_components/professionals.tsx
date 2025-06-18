@@ -13,8 +13,13 @@ import { ArrowRight } from "lucide-react"
 import Img2 from "../../../../public/images (5).jpg"
 import Img3 from "../../../../public/images (6).jpg"
 import Img4 from "../../../../public/images (7).png"
+import { User } from "@/generated/prisma"
 
-export function Professionals(){
+interface ProfessionalsProps {
+  professionals: User[]
+}
+
+export function Professionals({professionals}: ProfessionalsProps){
   return(
     <section className="bg-gray-100 py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,12 +30,13 @@ export function Professionals(){
       </div>
       <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
-        <Card className="overflow-hidden">
+        {professionals.map((clinic) => (
+          <Card className="overflow-hidden hover:shadow-lg duration-300" key={clinic.id}>
           <CardContent className="">
             <div>
               <div className="relative h-48">
                 <Image
-                  src={Img1}
+                  src={ clinic.image || Img1}
                   alt="Clinica 1"
                   fill
                   className="object-cover"
@@ -40,17 +46,17 @@ export function Professionals(){
               </div>
             </div>
 
-            <div className="p-4 space-y-4 ">
+            <div className="p-4 space-y-4 min-h-[160px] flex flex-col justify-between">
               <div className="flex items-center justify-between"> 
                 <div>
-                  <h3 className="font-semibold">Clinica Centro</h3>
-                  <p className="text-sm text-gray-500">Rua Salvador, 18 SP</p>
+                  <h3 className="font-semibold">{clinic.name}</h3>
+                  <p className="text-sm text-gray-500 line-clamp-2">{clinic.address || "Endereço não informado"}</p>
                 </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
               </div>
 
               <Link 
-                href="#"
+                href={`/clinic/${clinic.id}`}
+                target="_blank"
                 className="w-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center py-2 rounded-md text-sm font-medium md:text-base"
                 >
                 Agendar horario
@@ -61,117 +67,7 @@ export function Professionals(){
             </div>
           </CardContent>
         </Card>
-
-        <Card className="overflow-hidden">
-          <CardContent className="">
-            <div>
-              <div className="relative h-48">
-                <Image
-                  src={Img2}
-                  alt="Clinica 1"
-                  fill
-                  className="object-cover"
-                  quality={100}
-                
-                />
-              </div>
-            </div>
-
-            <div className="p-4 space-y-4 ">
-              <div className="flex items-center justify-between"> 
-                <div>
-                  <h3 className="font-semibold">Clinica Centro</h3>
-                  <p className="text-sm text-gray-500">Rua Salvador, 18 SP</p>
-                </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-              </div>
-
-              <Link 
-                href="#"
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center py-2 rounded-md text-sm font-medium md:text-base"
-                >
-                Agendar horario
-
-                <ArrowRight className="ml-2"/>
-              </Link>
-
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="overflow-hidden">
-          <CardContent className="">
-            <div>
-              <div className="relative h-48">
-                <Image
-                  src={Img3}
-                  alt="Clinica 1"
-                  fill
-                  className="object-cover"
-                  quality={100}
-                
-                />
-              </div>
-            </div>
-
-            <div className="p-4 space-y-4 ">
-              <div className="flex items-center justify-between"> 
-                <div>
-                  <h3 className="font-semibold">Clinica Centro</h3>
-                  <p className="text-sm text-gray-500">Rua Salvador, 18 SP</p>
-                </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-              </div>
-
-              <Link 
-                href="#"
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center py-2 rounded-md text-sm font-medium md:text-base"
-                >
-                Agendar horario
-
-                <ArrowRight className="ml-2"/>
-              </Link>
-
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="overflow-hidden">
-          <CardContent className="">
-            <div>
-              <div className="relative h-48">
-                <Image
-                  src={Img4}
-                  alt="Clinica 1"
-                  fill
-                  className="object-cover"
-                  quality={100}
-                
-                />
-              </div>
-            </div>
-
-            <div className="p-4 space-y-4 ">
-              <div className="flex items-center justify-between"> 
-                <div>
-                  <h3 className="font-semibold">Clinica Centro</h3>
-                  <p className="text-sm text-gray-500">Rua Salvador, 18 SP</p>
-                </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-              </div>
-
-              <Link 
-                href="#"
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center py-2 rounded-md text-sm font-medium md:text-base"
-                >
-                Agendar horario
-
-                <ArrowRight className="ml-2"/>
-              </Link>
-
-            </div>
-          </CardContent>
-        </Card>
+        ))}
 
       </section>
 

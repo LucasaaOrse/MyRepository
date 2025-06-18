@@ -27,6 +27,19 @@ export async function updateProfile(formdata: FormShema) {
     }
   }
 
+  const upcoming = await prisma.appointment.findFirst({
+  where: {
+    userId: session.user.id,
+    appointmentDate: { gte: new Date() },
+  }
+});
+
+if (upcoming) {
+  return {
+    error: "Não é possível alterar os horários: existem agendamentos futuros.",
+  };
+}
+
   const shema = formSchema.safeParse(formdata)
 
   if(!shema.success){

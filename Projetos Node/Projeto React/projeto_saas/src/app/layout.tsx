@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionAuthProvider } from "@/components/session.auth";
 import {Toaster} from "sonner"
+import { QueryClientContext } from "@/providers/queryclient"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,8 +20,10 @@ export default function RootLayout({
 
       >
         <SessionAuthProvider>
-        <Toaster duration={2500}/>
-        {children}
+          <QueryClientContext>
+            <Toaster duration={2500}/>
+              {children}
+          </QueryClientContext>
         </SessionAuthProvider>
       </body>
     </html>

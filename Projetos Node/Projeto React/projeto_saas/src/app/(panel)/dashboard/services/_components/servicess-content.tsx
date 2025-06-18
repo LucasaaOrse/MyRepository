@@ -1,5 +1,7 @@
+import Link from "next/link"
 import getAllServices from "../_data-access/get-all-services"
 import { ServicesList } from "./services-list"
+import { canPermission } from "@/utils/permissions/canPermission"
 
 
 interface ServicesContentProps {
@@ -8,8 +10,11 @@ interface ServicesContentProps {
 export async function ServicesContent({userId}: ServicesContentProps) {
 
   const services = await getAllServices({userId: userId})
+  const permissions = await canPermission({type: "service"})
+
+  console.log(permissions)
 
   return (
-    <ServicesList services={services.data || []}/>
+    <ServicesList services={services.data || []} permissions={permissions}/>
   )
 }

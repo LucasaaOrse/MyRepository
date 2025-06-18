@@ -8,29 +8,93 @@ import { Pencil, Plus, X } from "lucide-react"
 import { DialogService } from "./diaolog-services"
 import { Service } from "@/generated/prisma"
 import { formatCurrency} from "@/utils/format-currency"
+import { deleteService } from "../_actions/delete-service"
+import { toast } from "sonner"
+import { ResultPermissionProp } from "@/utils/permissions/canPermission"
+import { useRouter } from "next/navigation"
+import { SubscriptionExpiredCard } from "../../_components/subscription-expired-card"
+import { TrialBanner } from "../../_components/TrialBanner"
 
 interface ServicesListProps {
-  services: Service[]
+  services: Service[],
+  permissions: ResultPermissionProp
 }
 
-export function ServicesList({ services}: ServicesListProps) {
+export function ServicesList({ services, permissions }: ServicesListProps) {
   
   const [isDailogOpen, setIsDailogOpen] = useState(false)
+  const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const [editingService, setEditingService] = useState<Service | null>(null)
+
+  const canAddService = !permissions.expired && services.length < permissions.plan?.maxServices!;
+
+  const router = useRouter()
+
+
+  async function  handleDeleteService(serviceId: string) {
+    const response = await deleteService({serviceId: serviceId})
+
+    if(response?.error){
+      toast.error(response.error)
+      return
+    }
+
+    toast.success("Serviço deletado com sucesso")
+    setSelectedService(null)
+  }
+
+  function handleEditService(service: Service) {
+    setEditingService(service)
+    setIsDailogOpen(true)
+  }
+
+  if (permissions.planId === "TRIAL" && permissions.expired) {
+  return <SubscriptionExpiredCard />
+}
 
   return (
-    <Dialog open={isDailogOpen} onOpenChange={setIsDailogOpen}>
+    <>
+
+    {permissions.planId === "TRIAL" && !permissions.expired && (
+        <TrialBanner permissions={permissions} />
+      )}
+    
+
+    <Dialog 
+      open={isDailogOpen} 
+      onOpenChange={(open) => {
+        setIsDailogOpen(open)
+        if(!open) setEditingService(null)
+      
+      }}
+      
+    >
       <div className="mx-auto">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xl md:text-2xl font-bold">Serviços</CardTitle>
-            <DialogTrigger asChild>
-              <Button> 
-                <Plus className="w-4 h-4"/> 
-              </Button>  
-            </DialogTrigger>
-            <DialogContent>
+            {canAddService ? (
+              <DialogTrigger asChild>
+                <Button> 
+                  <Plus className="w-4 h-4"/> 
+                </Button>  
+              </DialogTrigger>
+            ) : (
+              <Button disabled variant="outline" title="Limite de serviços atingido">
+                Limite atingido
+              </Button>
+            )}
+
+            <DialogContent onInteractOutside={(e) => {e.preventDefault(); setIsDailogOpen(false); setEditingService(null)}}>
               <DialogService 
-                closeModal={() => setIsDailogOpen(false)}
+                closeModal={() => {setIsDailogOpen(false); setEditingService(null)}}
+                serviceId={editingService ? editingService.id : undefined}
+                initialValues={editingService ? {
+                  name: editingService.name,
+                  price: (editingService.price / 100).toFixed(2).replace('.', ','),
+                  hours: Math.floor(editingService.duration / 60).toString(),
+                  minutes: (editingService.duration % 60).toString()
+                }: undefined}
               />
             </DialogContent>
 
@@ -50,7 +114,7 @@ export function ServicesList({ services}: ServicesListProps) {
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        onClick={() => {}}
+                        onClick={() => handleEditService(service)}
                         
                         >
                         <Pencil className="w-4 h-4"/>
@@ -58,7 +122,7 @@ export function ServicesList({ services}: ServicesListProps) {
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        onClick={() => {}}
+                        onClick={() => setSelectedService(service)}
                         
                         >
                         <X className="w-4 h-4"/>
@@ -72,6 +136,36 @@ export function ServicesList({ services}: ServicesListProps) {
             </CardContent>
         </Card>
       </div>
-    </Dialog>
+      </Dialog>
+      {/* <DialogDelete> */}
+      <Dialog open={!!selectedService} onOpenChange={(open) => {
+        if(!open) setSelectedService(null)
+        
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar deleção</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja deletar o serviço {" "}
+              <strong>{selectedService?.name}</strong>?
+              Essa opção não pode ser desfeita
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setSelectedService(null)} >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleDeleteService(selectedService?.id || "")}
+            >
+              Deletar
+            </Button>
+          </div>
+        </DialogContent>
+
+      </Dialog>
+    
+    </>
   )
 }

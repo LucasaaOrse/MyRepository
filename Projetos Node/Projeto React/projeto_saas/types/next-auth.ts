@@ -4,9 +4,8 @@ declare module "next-auth"{
   interface Session{
     user: User & DefaultSession["user"]
   }
-}
 
-interface User{
+  interface User{
     id: string
     name: string,
     email: string,
@@ -20,3 +19,5 @@ interface User{
     createdAt: string,
     updatedAt: string
 }
+}
+
