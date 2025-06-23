@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+@keyframes spin-roulette {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-600%); } /* só um dummy */
+}
+
+.animate-spin-roulette {
+  animation: spin-roulette 3s ease-out forwards;
+}
+

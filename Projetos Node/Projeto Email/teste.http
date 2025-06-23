@@ -1,0 +1,16 @@
+
+@token = seu_token_supersecreto
+
+### Enviar email
+POST http://localhost:3000/send-email
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "to": "peyili4041@iridales.com",
+  "subject": "Boas-vindas!",
+  "template": "welcome",
+  "variables": {
+    "nome": "Lucas"
+  }
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Teste</h1>
+    <script>
+        import io from "socket.io-client"
+
+        const socket = io('http://localhost:3000')
+
+        socket.emit('mensagem', 'ola servidor')
+
+        socket.on('mensagem', (data) => {
+            console.log('mensagem recebida', data)
+        })
+    </script>
+</body>
+</html>

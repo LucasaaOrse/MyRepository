@@ -50,9 +50,9 @@ const userValidator = {
     email: Joi.string().email().optional().messages({
       'string.email': 'O e-mail deve ser válido',
     }),
-    type: Joi.string().valid('cliente', 'medico', 'admin').optional().messages({
+    type: Joi.string().valid('client', 'medico', 'admin').optional().messages({
       'string.base': 'O tipo deve ser uma string',
-      'any.only': 'O tipo deve ser "cliente", "medico" ou "admin"',
+      'any.only': 'O tipo deve ser "client", "medico" ou "admin"',
     }),
   }),
 
@@ -119,7 +119,7 @@ module.exports = {
 
       const salt = await bcrypt.genSalt(saltrounds)
       const hash = await bcrypt.hash(password, salt)
-      const type = 1
+      const type = "client"
 
       await db('users').insert({ name, email, password: hash, type })
 
@@ -180,6 +180,24 @@ module.exports = {
       }
 
       await db('users').update(editUser).where({ id })
+
+  // buscar o usuário atualizado
+      const updated = await findUserById(id)
+
+      // reemitir novo token com os dados atualizados
+      const newToken = jwt.sign(
+        { id: updated.id, email: updated.email, name: updated.name, type: updated.type },
+        secret,
+        { expiresIn: '1h' }
+      )
+      res.cookie('session', newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 1000,
+        path: '/'
+      })
+
       return res.json({ message: "Usuário editado com sucesso" })
     } catch (error) {
       return res.status(500).json({ error: "Erro do servidor", detail: error.message })
@@ -250,14 +268,14 @@ module.exports = {
 
         if (isPasswordCorrect) {
           const token = jwt.sign(
-            { email: user.email, name: user.name, type: user.type },
+            { id:user.id, email: user.email, name: user.name, type: user.type },
             secret,
             { expiresIn: "1h" }
           )
 
           res.cookie("session", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: false,
             sameSite: "lax",
             maxAge: 60 * 60 * 1000,
             path: "/"
@@ -276,19 +294,26 @@ module.exports = {
   },
 
 	async me(req, res) {
-    const authHeaders = req.headers.authorization
-
-    if (!authHeaders) {
-      return res.status(400).json({ error: "Token invalido" })
+    const token = req.cookies.session // pega o token do cookie
+  
+    if (!token) {
+      return res.status(400).json({ error: "Token não encontrado no cookie" })
     }
-
-    const token = authHeaders.split(" ")[1]
-
+  
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      console.log("Cookies recebidos:", req.cookies);
       return res.json({ user: decoded })
     } catch (error) {
-      return res.status(500).json({ error: "Token invalido", detail: error.message })
+      return res.status(500).json({ error: "Token inválido", detail: error.message })
     }
+  },
+  async  getTokenInfo(req, res) {
+    const { token } = req.query
+    const result = await db('passwordtokens').where({ token, used: 0 }).first()
+  
+    if (!result) return res.status(404).json({ error: 'Token inválido' })
+  
+    return res.json({ user_id: result.user_id })
   }
 }

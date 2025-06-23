@@ -13,6 +13,9 @@ module.exports = {
     useNullAsDefault: true, // necessário para SQLite
     migrations: {
       directory: './src/database/migrations'
+    },
+    seeds: {
+      directory: './src/database/seeds'
     }
   }
 
