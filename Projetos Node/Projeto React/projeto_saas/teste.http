@@ -1,0 +1,18 @@
+### teste de confirmação de agendamento
+POST http://localhost:3000/api/clinic/appointments/confirm-email
+Content-Type: application/json
+
+{
+  "appointmentId": "9ced19f3-6788-4ed0-a873-24bc0ccb5627"
+}
+
+### teste de cancelamento de agendamento
+POST http://localhost:3000/api/clinic/appointments/cancel
+Content-Type: application/json
+Authorization: Bearer seu_token_supersecreto
+
+{
+  "appointmentId": "93206e34-8211-4ed2-8260-68196d1332e7",
+  "reason": "Teste de cancelamento",
+  "cancelType": "RESCHEDULE"
+}

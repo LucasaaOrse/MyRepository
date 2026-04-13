@@ -48,7 +48,8 @@ export async function GET(req: NextRequest) {
         appointmentDate: {
           gte: startDate,
           lte: endDate
-        }
+        },
+        status: "CONFIRMED"
       },
       include: {
         service: true
@@ -72,8 +73,6 @@ export async function GET(req: NextRequest) {
     }
 
     const blockedtimes = Array.from(blockedSlots)
-
-    console.log("blockedtimes", blockedtimes)
 
     return NextResponse.json({
       blockedtimes

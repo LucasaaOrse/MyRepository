@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 
 export async function GET(req: Request) {
   const session = await auth();
+  console.log("session check: ", session);
   if (!session?.user?.id) {
     return NextResponse.json({ hasFuture: false }); // ou erro
   }

@@ -1,23 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-
-const socket = io("http://10.0.20.116:3001"); // IP do backend
+import { useEffect, useState, useRef } from "react";
+import { io, Socket } from "socket.io-client";
+import EmojiPicker, { Theme } from "emoji-picker-react";
 
 interface Mensagem {
   nome: string;
   texto: string;
-  eu: boolean;
+  tipo?: "sistema" | "usuario";
+  timestamp: string;
 }
+
+const socket: Socket = io("http://10.0.18.70:3001");
 
 function gerarCorPorNome(nome: string) {
   let hash = 0;
   for (let i = 0; i < nome.length; i++) {
     hash = nome.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const cor = `hsl(${hash % 180}, 50%, 60%)`; // Ajustado para tons mais suaves e menos saturados
-  return cor;
+  return `hsl(${hash % 360}, 60%, 70%)`;
 }
 
 export default function Chat() {
@@ -25,100 +26,189 @@ export default function Chat() {
   const [mensagem, setMensagem] = useState("");
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [nomeDefinido, setNomeDefinido] = useState(false);
+  const [onlineCount, setOnlineCount] = useState(0);
+  const [quemEstaDigitando, setQuemEstaDigitando] = useState<string | null>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [mostrarBotaoScroll, setMostrarBotaoScroll] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    socket.on("mensagem", (msg: { nome: string; texto: string }) => {
-      setMensagens((prev) => [
-        ...prev,
-        { ...msg, eu: msg.nome === nome },
-      ]);
+    const nomeSalvo = localStorage.getItem("chat-username");
+    if (nomeSalvo) {
+      setNome(nomeSalvo);
+      setNomeDefinido(true);
+      socket.emit("entrou", nomeSalvo);
+    }
+
+    socket.on("users_count", (count: number) => setOnlineCount(count));
+    
+    socket.on("user_typing", (data: { nome: string; isTyping: boolean }) => {
+      setQuemEstaDigitando(data.isTyping ? data.nome : null);
+    });
+
+    socket.on("mensagem", (msg: Mensagem) => {
+      setMensagens((prev) => [...prev, msg]);
     });
 
     return () => {
+      socket.off("users_count");
+      socket.off("user_typing");
       socket.off("mensagem");
     };
-  }, [nome]);
+  }, []);
+
+  // Monitorar scroll para mostrar botão "Ir para o fim"
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+      const isBottom = scrollHeight - scrollTop <= clientHeight + 100;
+      setMostrarBotaoScroll(!isBottom);
+    }
+  };
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (!mostrarBotaoScroll) scrollToBottom();
+  }, [mensagens]);
+
+  const handleTyping = (val: string) => {
+    setMensagem(val);
+    socket.emit("typing", { nome, isTyping: true });
+
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("typing", { nome, isTyping: false });
+    }, 2000);
+  };
 
   const enviar = () => {
     if (!mensagem.trim()) return;
-    socket.emit("mensagem", { nome, texto: mensagem });
+    const novaMsg: Mensagem = {
+      nome,
+      texto: mensagem,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    socket.emit("mensagem", novaMsg);
+    socket.emit("typing", { nome, isTyping: false });
     setMensagem("");
+    setShowEmojiPicker(false);
   };
 
   if (!nomeDefinido) {
     return (
-      <div className="p-4 flex flex-col gap-2">
-        <h2 className="text-xl font-bold">Digite seu nome para entrar</h2>
-        <input
-          className="border px-3 py-2 rounded w-full"
-          placeholder="Seu nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-        <button
-          onClick={() => setNomeDefinido(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Entrar
-        </button>
+      <div className="flex items-center justify-center min-h-screen bg-slate-900 text-white p-6">
+        <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
+          <h2 className="text-2xl font-bold mb-6 text-center">Entrar no Chat</h2>
+          <input
+            className="bg-slate-700 border border-slate-600 px-4 py-3 rounded-xl w-full mb-4 focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="Seu apelido..."
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && (localStorage.setItem("chat-username", nome), setNomeDefinido(true), socket.emit("entrou", nome))}
+          />
+          <button 
+            onClick={() => { localStorage.setItem("chat-username", nome); setNomeDefinido(true); socket.emit("entrou", nome); }}
+            className="w-full bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition-all"
+          >
+            Entrar
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">Chat</h2>
+    <div className="flex flex-col h-screen bg-slate-950 text-slate-200 overflow-hidden">
+      {/* Header */}
+      <header className="bg-slate-900 p-4 border-b border-slate-800 flex justify-between items-center shadow-lg z-10">
+        <div>
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Chat Global
+          </h2>
+          <p className="text-xs text-slate-400">{onlineCount} usuários conectados</p>
+        </div>
+        <span className="text-xs opacity-50">@{nome}</span>
+      </header>
 
-      <div className="h-96 overflow-y-auto bg-gray-100 p-4 rounded shadow mb-4 space-y-2">
-      {mensagens.map((msg, i) => (
-          <div
-            key={i}
-            className={`max-w-[70%] px-4 py-2 rounded-lg mb-2 text-white ${
-              msg.nome === nome
-                ? "bg-blue-800 self-end ml-auto"    // balão do próprio usuário
-                : "bg-gray-700 self-start mr-auto"  // balão dos outros
-            }`}
-            style={{ whiteSpace: "pre-wrap" }} // permite quebra de linha
+      {/* Área de Mensagens */}
+      <div 
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"
+      >
+        {mensagens.map((msg, i) => {
+          const ehMeu = msg.nome === nome;
+          if (msg.tipo === "sistema") {
+            return <div key={i} className="text-center text-[10px] text-slate-500 uppercase tracking-widest my-4">{msg.texto}</div>;
+          }
+          return (
+            <div key={i} className={`flex ${ehMeu ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[75%] rounded-2xl px-4 py-2 shadow-xl ${ehMeu ? "bg-blue-600 text-white rounded-tr-none" : "bg-slate-800 text-slate-100 rounded-tl-none"}`}>
+                {!ehMeu && <span className="text-[10px] font-black block mb-1 opacity-80" style={{ color: gerarCorPorNome(msg.nome) }}>{msg.nome}</span>}
+                <p className="text-sm whitespace-pre-wrap">{msg.texto}</p>
+                <span className="text-[9px] block mt-1 text-right opacity-40">{msg.timestamp}</span>
+              </div>
+            </div>
+          );
+        })}
+        
+        {/* Botão Flutuante Scroll */}
+        {mostrarBotaoScroll && (
+          <button 
+            onClick={scrollToBottom}
+            className="fixed bottom-24 right-8 bg-blue-600 p-2 rounded-full shadow-2xl animate-bounce hover:bg-blue-500 transition-all"
           >
-            <span
-              className="font-semibold block mb-1"
-              style={{
-                color: gerarCorPorNome(msg.nome), // Cor do nome do usuário
-                padding: "2px 6px",
-                borderRadius: "4px",
-                display: "inline-block",
-                fontSize: "0.875rem",
-              }}
-            >
-              {msg.nome}
-            </span>
-            <p>{msg.texto}</p>
+            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+          </button>
+        )}
+      </div>
+
+      {/* Rodapé e Inputs */}
+      <footer className="p-4 bg-slate-900 border-t border-slate-800 relative">
+        {quemEstaDigitando && (
+          <div className="absolute -top-6 left-4 text-[10px] text-blue-400 italic animate-pulse">
+            {quemEstaDigitando} está digitando...
           </div>
-        ))}
-
-      </div>
-
-      <div className="flex gap-2">
-      <textarea
-          className="w-full border px-2 py-1 rounded resize-none"
-          rows={3}
-          value={mensagem}
-          onChange={(e) => setMensagem(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault(); // impede quebra de linha
-              enviar(); // chama a função de envio
-            }
-          }}
-          placeholder="Digite sua mensagem... (Shift + Enter para nova linha)"
-        />
-        <button
-          onClick={enviar}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Enviar
-        </button>
-      </div>
+        )}
+        
+        <div className="max-w-4xl mx-auto flex items-end gap-2">
+          <div className="relative flex-1 flex items-center bg-slate-800 rounded-xl border border-slate-700">
+            <button 
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="p-3 opacity-60 hover:opacity-100 transition-opacity"
+            >
+              😊
+            </button>
+            <textarea
+              className="flex-1 bg-transparent border-none py-3 px-2 focus:ring-0 outline-none resize-none text-sm max-h-32"
+              rows={1}
+              value={mensagem}
+              onChange={(e) => handleTyping(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), enviar())}
+              placeholder="Mensagem..."
+            />
+            {showEmojiPicker && (
+              <div className="absolute bottom-full left-0 mb-2 shadow-2xl">
+                <EmojiPicker 
+                  theme={Theme.DARK} 
+                  onEmojiClick={(emoji) => setMensagem(prev => prev + emoji.emoji)}
+                  lazyLoadEmojis
+                />
+              </div>
+            )}
+          </div>
+          <button onClick={enviar} className="bg-blue-600 hover:bg-blue-500 p-3.5 rounded-xl transition-all active:scale-90">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
+          </button>
+        </div>
+      </footer>
     </div>
   );
 }

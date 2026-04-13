@@ -48,16 +48,10 @@ export function ServicesList({ services, permissions }: ServicesListProps) {
     setIsDailogOpen(true)
   }
 
-  if (permissions.planId === "TRIAL" && permissions.expired) {
-  return <SubscriptionExpiredCard />
-}
+
 
   return (
     <>
-
-    {permissions.planId === "TRIAL" && !permissions.expired && (
-        <TrialBanner permissions={permissions} />
-      )}
     
 
     <Dialog 

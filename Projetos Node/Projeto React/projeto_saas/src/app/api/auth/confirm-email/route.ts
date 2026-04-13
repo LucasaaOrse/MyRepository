@@ -1,52 +1,47 @@
-// app/api/auth/confirm-email/route.ts
 import { NextResponse } from "next/server"
-import prisma from "./../../../../lib/prisma"
+import prisma from "@/lib/prisma"
 
 export async function GET(req: Request) {
-  const url = new URL(req.url)
-  const token = url.searchParams.get("token")
+  try {
+    const url = new URL(req.url)
+    const token = url.searchParams.get("token")
 
-  if (!token) {
-    return NextResponse.json({ error: "Token é obrigatório" }, { status: 400 })
-  }
+    if (!token) {
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_API_URL}/register/verify/error`)
+    }
 
-  // Buscar o token na tabela
-  const verificationRecord = await prisma.verificationToken.findFirst({
-    where: { token },
-  })
-
-  if (!verificationRecord) {
-    return NextResponse.json({ error: "Token inválido ou expirado" }, { status: 400 })
-  }
-
-  // Verificar se o token expirou
-  if (verificationRecord.expires < new Date()) {
-    // Deletar token expirado
-    await prisma.verificationToken.delete({
-      where: { 
-        identifier_token: {
-          identifier: verificationRecord.identifier,
-          token
-        }
-       },
+    const verificationRecord = await prisma.verificationToken.findFirst({
+      where: { token },
     })
-    return NextResponse.json({ error: "Token expirado" }, { status: 400 })
-  }
 
-  // Atualizar o usuário para marcar email como verificado
-  await prisma.user.update({
-    where: { email: verificationRecord.identifier },
-    data: { emailVerified: new Date() },
-  })
+    if (!verificationRecord) {
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_API_URL}/register/verify/expired`)
+    }
 
-  // Deletar o token para evitar reutilização
-  await prisma.verificationToken.delete({
-    where: { 
-      identifier_token: {
+    if (verificationRecord.expires < new Date()) {
+      await prisma.verificationToken.deleteMany({
+        where: { identifier: verificationRecord.identifier },
+      })
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_API_URL}/register/verify/expired`)
+    }
+
+    // ✅ Atualiza emailVerified corretamente
+    await prisma.user.update({
+      where: { email: verificationRecord.identifier },
+      data: { emailVerified: new Date() },
+    })
+
+    // ✅ Deleta o token sem usar chave composta
+    await prisma.verificationToken.deleteMany({
+      where: {
         identifier: verificationRecord.identifier,
-        token
-        } },
-  })
+        token: verificationRecord.token,
+      },
+    })
 
-  return NextResponse.json({ success: true })
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_API_URL}/register/verify/success`)
+  } catch (error) {
+    console.error("Erro ao confirmar e-mail:", error)
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_API_URL}/register/verify/error`)
+  }
 }

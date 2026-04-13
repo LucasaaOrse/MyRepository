@@ -36,6 +36,7 @@ export async function GET(req: NextRequest, context: { params: { userId: string 
     where: {
       userId,
       appointmentDate: dateFilter,
+      status: "CONFIRMED",
     },
   })
 
@@ -45,6 +46,7 @@ export async function GET(req: NextRequest, context: { params: { userId: string 
     where: {
       userId,
       appointmentDate: dateFilter,
+      status: "CONFIRMED",
     },
     _count: { _all: true },
   })
@@ -54,13 +56,13 @@ export async function GET(req: NextRequest, context: { params: { userId: string 
     where: {
       userId,
       appointmentDate: dateFilter,
+      status: "CONFIRMED",
     },
     select: {
       appointmentDate: true,
     },
   })
 
-console.log(byDateRaw);
 
 // Agrupa por data no formato YYYY-MM-DD
 const dateMap: Record<string, number> = {}
